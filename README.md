@@ -1,4 +1,4 @@
-# MimiClaw: Pocket AI Assitant on $5 chips
+# MimiClaw: Pocket AI Assistant on a $5 Chip
 
 <p align="center">
   <img src="assets/banner.png" alt="MimiClaw" width="480" />
@@ -8,25 +8,38 @@
 
 MimiClaw turns a tiny ESP32-S3 board into a personal AI assistant. Plug it into USB power, connect to WiFi, and talk to it through Telegram — it handles any task you throw at it and evolves over time with local memory — all on a chip the size of a thumb.
 
-## What It Does
+## Meet MimiClaw
 
-- **Ultra-light** — No Linux, no Node.js, no bloat — just pure C
-- **Gets work done** — Message it from Telegram, it handles the rest
-- **Self-evolving** — Learns from memory, remembers across reboots
-- **Always on** — USB power, 0.5 W, runs 24/7
-- **$5 total** — One ESP32-S3 board, nothing else
+- **Tiny** — No Linux, no Node.js, no bloat — just pure C
+- **Handy** — Message it from Telegram, it handles the rest
+- **Loyal** — Learns from memory, remembers across reboots
+- **Energetic** — USB power, 0.5 W, runs 24/7
+- **Lovable** — One ESP32-S3 board, $5, nothing else
 
 ## How It Works
 
 ```
-You (Telegram) ───▶ ESP32-S3 ───▶ Claude AI
-                        │
-                    Memory chip
-                    (your conversations,
-                     personality, notes)
+                         ┌─────────────── Agent Loop ───────────────┐
+                         │                                          │
+ ┌───────────┐     ┌─────▼─────┐     ┌─────────┐     ┌─────────┐  │
+ │ Channels  │     │  Message   │     │  Claude  │     │  Tools  │  │
+ │           │────▶│  Queue     │────▶│  (LLM)   │────▶│         │──┘
+ │ Telegram  │     └───────────┘     └────┬─────┘     └────┬────┘
+ │ WebSocket │◀──────────────────────────-│                │
+ └───────────┘        Response            │                │
+                                    ┌─────▼────────────────▼────┐
+                                    │        Context            │
+                                    │  ┌──────────┐ ┌────────┐  │
+                                    │  │  Memory   │ │ Skills │  │
+                                    │  │ SOUL.md   │ │  OTA   │  │
+                                    │  │ USER.md   │ │  CLI   │  │
+                                    │  │ MEMORY.md │ │  ...   │  │
+                                    │  └──────────┘ └────────┘  │
+                                    └───────────────────────────┘
+                                          ESP32-S3 Flash
 ```
 
-You send a message on Telegram. The board picks it up over WiFi, asks Claude for a response (using your stored personality and memory as context), and sends the reply back to Telegram. All your chat history and memories are saved on the board's flash storage as readable text files.
+You send a message on Telegram. The ESP32-S3 picks it up over WiFi, feeds it into an agent loop — Claude thinks, calls tools, reads memory — and sends the reply back. Everything runs on a single $5 chip with all your data stored locally on flash.
 
 ## Quick Start
 
