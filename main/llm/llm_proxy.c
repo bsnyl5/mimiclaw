@@ -48,20 +48,24 @@ static void llm_log_payload(const char *label, const char *payload)
         ESP_LOGI(TAG, "%s[%u]: %s", label, (unsigned)off, chunk);
     }
 #else
-    size_t shown = total > MIMI_LLM_LOG_PREVIEW_BYTES ? MIMI_LLM_LOG_PREVIEW_BYTES : total;
-    char preview[MIMI_LLM_LOG_PREVIEW_BYTES + 1];
-    memcpy(preview, payload, shown);
-    preview[shown] = '\0';
-    for (size_t i = 0; i < shown; i++) {
-        if (preview[i] == '\n' || preview[i] == '\r' || preview[i] == '\t') {
-            preview[i] = ' ';
+    if (MIMI_LLM_LOG_PREVIEW_BYTES > 0) {
+        size_t shown = total > MIMI_LLM_LOG_PREVIEW_BYTES ? MIMI_LLM_LOG_PREVIEW_BYTES : total;
+        char preview[MIMI_LLM_LOG_PREVIEW_BYTES + 1];
+        memcpy(preview, payload, shown);
+        preview[shown] = '\0';
+        for (size_t i = 0; i < shown; i++) {
+            if (preview[i] == '\n' || preview[i] == '\r' || preview[i] == '\t') {
+                preview[i] = ' ';
+            }
         }
+        ESP_LOGI(TAG, "%s (%u bytes): %s%s",
+                 label,
+                 (unsigned)total,
+                 preview,
+                 (shown < total) ? " ..." : "");
+    } else {
+        ESP_LOGI(TAG, "%s (%u bytes)", label, (unsigned)total);
     }
-    ESP_LOGI(TAG, "%s (%u bytes): %s%s",
-             label,
-             (unsigned)total,
-             preview,
-             (shown < total) ? " ..." : "");
 #endif
 }
 

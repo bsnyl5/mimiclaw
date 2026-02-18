@@ -392,11 +392,14 @@ esp_err_t telegram_send_message(const char *chat_id, const char *text)
         free(json_str);
 
         int sent_ok = 0;
+        bool markdown_failed = false;
         if (resp) {
             const char *desc = NULL;
             sent_ok = tg_response_is_ok(resp, &desc);
             if (!sent_ok) {
-                ESP_LOGW(TAG, "Markdown send failed: %s", desc ? desc : "unknown");
+                markdown_failed = true;
+                ESP_LOGI(TAG, "Markdown rejected by Telegram for %s: %s",
+                         chat_id, desc ? desc : "unknown");
             }
         }
 
@@ -435,6 +438,9 @@ esp_err_t telegram_send_message(const char *chat_id, const char *text)
         if (!sent_ok) {
             all_ok = 0;
         } else {
+            if (markdown_failed) {
+                ESP_LOGI(TAG, "Plain-text fallback succeeded for %s", chat_id);
+            }
             ESP_LOGI(TAG, "Telegram send success to %s (%d bytes)", chat_id, (int)chunk);
         }
 
